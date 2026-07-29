@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Luis De Sousa — Project Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --bg:#0d1b6b;
+    --bg-2:#1a2f8a;
+    --bg-3:#2d4bac;
+    --surface:#ffffff;
+    --brand:#4F6EF7;
+    --accent:#F7A14F;
+    --text-mid:#4B5563;
+    --text-light:#9CA3AF;
+    --font:'DM Sans', sans-serif;
+    --serif:'DM Serif Display', serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:var(--font);
+    background:linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+    min-height:100vh;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:48px 20px 80px;
+  }
+  .header{ text-align:center; max-width:480px; margin-bottom:36px; }
+  .eyebrow{
+    display:inline-block;
+    font-size:11px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.22);
+    padding:5px 14px;
+    border-radius:99px;
+    margin-bottom:16px;
+    color:rgba(255,255,255,.85);
+  }
+  h1{ font-family:var(--serif); font-size:32px; letter-spacing:-0.5px; }
+  .sub{ font-size:14px; color:rgba(255,255,255,.65); margin-top:10px; line-height:1.5; }
+
+  .list{ width:100%; max-width:420px; display:flex; flex-direction:column; gap:16px; }
+
+  .card{
+    display:block;
+    text-decoration:none;
+    background:var(--surface);
+    border-radius:20px;
+    padding:20px 20px 22px;
+    box-shadow:0 8px 30px rgba(0,0,0,.25);
+    position:relative;
+    overflow:hidden;
+    transition:transform .15s ease;
+  }
+  .card:active{ transform:scale(.98); }
+  .card-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+  .card-tag{
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.6px;
+    text-transform:uppercase;
+    color:var(--brand);
+    background:#EEF1FC;
+    padding:4px 10px;
+    border-radius:99px;
+  }
+  .card h2{
+    font-family:var(--serif);
+    color:#111827;
+    font-size:20px;
+    margin-top:12px;
+  }
+  .card p{
+    font-size:13px;
+    color:var(--text-mid);
+    margin-top:6px;
+    line-height:1.5;
+  }
+  .card-cta{
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--brand);
+  }
+  .card-cta svg{ width:14px; height:14px; }
+
+  .card.disabled{
+    opacity:.55;
+    pointer-events:none;
+  }
+  .card.disabled .card-cta{ color:var(--text-light); }
+
+  footer{
+    margin-top:44px;
+    text-align:center;
+    font-size:12px;
+    color:rgba(255,255,255,.45);
+  }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <span class="eyebrow">IT Student · Portfolio</span>
+    <h1>Luis De Sousa</h1>
+    <p class="sub">A few of the projects I've built so far. Tap any card to open the interactive prototype — best viewed on your phone.</p>
+  </div>
+
+  <div class="list">
+
+    <a class="card" href="studybuddy.html">
+      <div class="card-top">
+        <span class="card-tag">Mobile App · UI/UX</span>
+      </div>
+      <h2>StudyBuddy SRL</h2>
+      <p>High-fidelity mobile prototype for a student study-planning app — built as part of a usability &amp; interaction design project.</p>
+      <div class="card-cta">
+        Open prototype
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>
+    </a>
+
+    <a class="card" href="https://youtu.be/uJKjhIzZmCI" target="_blank" rel="noopener">
+      <div class="card-top">
+        <span class="card-tag">Full-Stack · Enterprise System</span>
+      </div>
+      <h2>GLMS — Global Logistics Management System</h2>
+      <p>Enterprise-grade logistics platform for TechMove Logistics — ASP.NET Core MVC frontend, JWT-secured Web API, SQL Server, fully Dockerised with CI/CD. Watch the demo video below.</p>
+      <div class="card-cta">
+        Watch demo video
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>
+    </a>
+
+    <div class="card disabled">
+      <div class="card-top">
+        <span class="card-tag">Coming soon</span>
+      </div>
+      <h2>More projects</h2>
+      <p>Additional prototypes will be added here as they're ready.</p>
+      <div class="card-cta">Check back soon</div>
+    </div>
+
+  </div>
+
+  <footer>Luis De Sousa Junior · ST10307204</footer>
+
+</body>
+</html>

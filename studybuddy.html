@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>StudyBuddy SRL — High-Fidelity Prototype | ST10307204</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+  /* ── DESIGN TOKENS ─────────────────────────────── */
+  :root {
+    --brand:        #4F6EF7;
+    --brand-mid:    #3A56D4;
+    --brand-dark:   #1E2F7A;
+    --accent:       #F7A14F;
+    --accent-green: #3EC97B;
+    --accent-red:   #F75A5A;
+    --bg:           #F4F6FF;
+    --surface:      #FFFFFF;
+    --surface2:     #EEF1FC;
+    --surface3:     #E3E8F8;
+    --text-primary: #111827;
+    --text-mid:     #4B5563;
+    --text-light:   #9CA3AF;
+    --border:       #D1D9F0;
+    --shadow-sm:    0 1px 4px rgba(79,110,247,.10);
+    --shadow-md:    0 4px 16px rgba(79,110,247,.14);
+    --shadow-lg:    0 8px 32px rgba(79,110,247,.18);
+    --r-sm:  10px;
+    --r-md:  16px;
+    --r-lg:  24px;
+    --r-xl:  32px;
+    --font:  'DM Sans', sans-serif;
+    --serif: 'DM Serif Display', serif;
+    --nav-h: 64px;
+  }
+
+  /* ── RESET ─────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background: linear-gradient(135deg, #0d1b6b 0%, #1a2f8a 40%, #2d4bac 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 32px 20px 60px;
+    gap: 20px;
+  }
+
+  /* ── PAGE HEADER ───────────────────────────────── */
+  .page-header {
+    text-align: center;
+    color: white;
+  }
+  .page-header h1 { font-family: var(--serif); font-size: 28px; letter-spacing: -0.5px; }
+  .page-header p  { font-size: 13px; opacity: .7; margin-top: 4px; }
+
+  /* ── PRINCIPLE BADGE ───────────────────────────── */
+  .principle-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 99px;
+    padding: 4px 12px 4px 4px;
+    font-size: 11px;
+    color: white;
+    font-weight: 600;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    backdrop-filter: blur(8px);
+  }
+  .principle-label .dot {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: white;
+  }
+
+  /* ── PHONE FRAME ───────────────────────────────── */
+  .phone-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .phone {
+    width: 375px;
+    min-height: 812px;
+    height: 812px;
+    background: var(--surface);
+    border-radius: 50px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 0 8px #1a1f35, 0 0 0 10px #2d3460, 0 24px 60px rgba(0,0,0,.5);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── STATUS BAR ────────────────────────────────── */
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-mid);
+    flex-shrink: 0;
+    background: var(--surface);
+    z-index: 10;
+  }
+  .status-bar .notch {
+    width: 80px; height: 20px;
+    background: #111;
+    border-radius: 0 0 12px 12px;
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+  }
+  .status-icons { display: flex; gap: 4px; align-items: center; }
+
+  /* ── SCREENS ───────────────────────────────────── */
+  .screen {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    background: var(--bg);
+    position: relative;
+  }
+  .screen.active { display: flex; }
+  .screen-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .screen-scroll::-webkit-scrollbar { display: none; }
+
+  /* ── BOTTOM NAV ────────────────────────────────── */
+  .bottom-nav {
+    display: flex;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    height: var(--nav-h);
+    flex-shrink: 0;
+    z-index: 20;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: var(--font);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-light);
+    transition: color .2s;
+    padding: 8px 4px;
+  }
+  .nav-item.active { color: var(--brand); }
+  .nav-item svg { width: 22px; height: 22px; }
+  .nav-dot {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--brand);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .nav-item.active .nav-dot { opacity: 1; }
+
+  /* ── SCREEN HEADER ─────────────────────────────── */
+  .screen-header {
+    padding: 16px 20px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .screen-title { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+  .screen-sub   { font-size: 13px; color: var(--text-light); margin-top: 2px; }
+
+  /* ── CARDS ─────────────────────────────────────── */
+  .card {
+    background: var(--surface);
+    border-radius: var(--r-md);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+  }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--text-mid); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
+
+  /* ── BUTTONS ───────────────────────────────────── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px;
+    border: none; cursor: pointer;
+    font-family: var(--font); font-weight: 600;
+    border-radius: 99px; transition: all .18s;
+  }
+  .btn-primary {
+    background: var(--brand); color: white;
+    padding: 13px 28px; font-size: 15px;
+    box-shadow: 0 4px 14px rgba(79,110,247,.4);
+  }
+  .btn-primary:hover { background: var(--brand-mid); transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--surface2); color: var(--brand);
+    padding: 11px 22px; font-size: 14px;
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--surface3); }
+  .btn-ghost {
+    background: transparent; color: var(--text-mid);
+    padding: 11px 22px; font-size: 14px;
+    border: 1.5px solid var(--border);
+  }
+  .btn-sm { padding: 8px 16px; font-size: 13px; }
+
+  /* ── PILL TAG ──────────────────────────────────── */
+  .tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 99px;
+    font-size: 11px; font-weight: 600;
+  }
+  .tag-blue  { background: #EBF0FF; color: var(--brand); }
+  .tag-green { background: #E6FBF0; color: #1EA55A; }
+  .tag-amber { background: #FFF4E6; color: #D97706; }
+  .tag-red   { background: #FFF0F0; color: #DC2626; }
+
+  /* ────────────────────────────────────────────────
+     SCREEN 1 — SPLASH
+  ─────────────────────────────────────────────────*/
+  #screen-splash {
+    background: linear-gradient(160deg, var(--brand-dark) 0%, var(--brand) 60%, #6B8AFF 100%);
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+  .splash-logo {
+    width: 88px; height: 88px;
+    background: rgba(255,255,255,.15);
+    border: 2px solid rgba(255,255,255,.3);
+    border-radius: 28px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 44px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(12px);
+  }
+  .splash-title {
+    font-family: var(--serif);
+    font-size: 36px;
+    color: white;
+    text-align: center;
+  }
+  .splash-sub {
+    color: rgba(255,255,255,.7);
+    font-size: 15px;
+    text-align: center;
+    margin-top: 8px;
+    max-width: 240px;
+    line-height: 1.5;
+  }
+  .splash-dots {
+    display: flex; gap: 6px; margin-top: 40px;
+  }
+  .splash-dots span {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.4);
+  }
+  .splash-dots span.active { background: white; width: 20px; border-radius: 4px; }
+  .splash-cta {
+    margin-top: 48px;
+    background: white; color: var(--brand);
+    padding: 15px 52px; border-radius: 99px;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer; border: none;
+    font-family: var(--font);
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    transition: transform .18s;
+  }
+  .splash-cta:hover { transform: scale(1.03); }
+
+  /* ────────────────────────────────────────────────
+     SCREEN 2 — HOME
+  ─────────────────────────────────────────────────*/
+  #screen-home { background: var(--bg); }
+  .home-hero {
+    background: linear-gradient(135deg, var(--brand-dark), var(--brand));
+    padding: 20px 20px 28px;
+    color: white;
+    flex-shrink: 0;
+  }
+  .home-hero-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+  .home-greeting { font-size: 11px; opacity: .7; letter-spacing: .5px; text-transform: uppercase; }
+  .home-name { font-family: var(--serif); font-size: 28px; margin-top: 2px; }
+  .home-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: rgba(255,255,255,.25);
+    border: 2px solid rgba(255,255,255,.5);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700;
+  }
+  .home-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .home-stat {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: var(--r-sm);
+    padding: 10px 8px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+  }
+  .home-stat-val { font-size: 22px; font-weight: 700; line-height: 1; }
+  .home-stat-lbl { font-size: 10px; opacity: .7; margin-top: 3px; }
+
+  .home-section { padding: 16px 16px 0; }
+  .home-section-title {
+    font-size: 13px; font-weight: 700;
+    color: var(--text-mid);
+    text-transform: uppercase; letter-spacing: .6px;
+    margin-bottom: 10px;
+  }
+
+  .reflection-card {
+    background: linear-gradient(135deg, #FFF7ED, #FFF3E8);
+    border: 1px solid #F7C98B;
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .reflection-text { font-size: 13px; color: #92400E; font-weight: 500; max-width: 200px; line-height: 1.4; }
+  .btn-reflect {
+    background: var(--accent); color: white;
+    border: none; border-radius: 99px;
+    padding: 8px 14px; font-size: 12px; font-weight: 700;
+    cursor: pointer; font-family: var(--font);
+    white-space: nowrap; flex-shrink: 0;
+    transition: transform .18s;
+  }
+  .btn-reflect:hover { transform: scale(1.04); }
+
+  .session-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: box-shadow .18s, transform .18s;
+    border-left: 3px solid var(--brand);
+  }
+  .session-card:hover { box-shadow: var(--shadow-md); transform: translateX(2px); }
+  .session-card:nth-child(2) { border-left-color: var(--accent); }
+  .session-card:nth-child(3) { border-left-color: var(--accent-green); }
+  .session-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+  .session-time { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+  .chevron { color: var(--text-light); font-size: 18px; }
+
+  .quick-start {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 12px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .qs-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: 13px; font-weight: 600;
+    color: var(--brand);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    transition: background .18s;
+  }
+  .qs-btn:hover { background: var(--surface3); }
+  .qs-btn span.icon { font-size: 22px; }
+
+  /* ────────────────────────────────────────────────
+     SCREEN 3 — STUDY SESSION
+  ─────────────────────────────────────────────────*/
+  #screen-study { background: var(--bg); }
+  .session-hero {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px 20px;
+    flex-shrink: 0;
+  }
+  .session-back {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600; color: var(--brand);
+    cursor: pointer; border: none; background: none;
+    font-family: var(--font); margin-bottom: 12px;
+    padding: 0;
+  }
+  .session-subject { font-family: var(--serif); font-size: 24px; color: var(--text-primary); }
+  .session-chapter { font-size: 13px; color: var(--text-light); margin-top: 2px; }
+
+  .timer-ring-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 28px 20px 20px;
+    background: var(--bg);
+  }
+  .timer-ring {
+    width: 160px; height: 160px; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .timer-svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+  .timer-track { fill: none; stroke: var(--surface3); stroke-width: 10; }
+  .timer-prog  { fill: none; stroke: var(--brand); stroke-width: 10; stroke-linecap: round;
+                 stroke-dasharray: 440; stroke-dashoffset: 110; transition: stroke-dashoffset .5s; }
+  .timer-val  { font-family: var(--serif); font-size: 36px; color: var(--text-primary); z-index: 1; }
+  .timer-sub  { font-size: 11px; color: var(--text-light); position: absolute; bottom: 28px; z-index: 1; }
+
+  /* CONTRAST: 3 buttons with distinct visual weight */
+  .timer-controls {
+    display: flex; gap: 12px; align-items: center;
+  }
+  /* Primary — filled */
+  .btn-start {
+    background: var(--brand); color: white;
+    border: none; border-radius: 99px;
+    padding: 14px 36px; font-size: 16px; font-weight: 700;
+    cursor: pointer; font-family: var(--font);
+    box-shadow: 0 6px 20px rgba(79,110,247,.4);
+    display: flex; align-items: center; gap: 8px;
+    transition: all .18s;
+  }
+  .btn-start:hover { background: var(--brand-mid); transform: translateY(-1px); }
+  /* Secondary — outlined */
+  .btn-restart {
+    background: transparent; color: var(--text-mid);
+    border: 1.5px solid var(--border);
+    border-radius: 99px; padding: 12px 18px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; font-family: var(--font);
+    display: flex; align-items: center; gap: 6px;
+    transition: background .18s;
+  }
+  .btn-restart:hover { background: var(--surface3); }
+  /* Ghost — muted */
+  .btn-skip {
+    background: transparent; color: var(--text-light);
+    border: 1.5px solid var(--border);
+    border-radius: 99px; padding: 12px 16px;
+    font-size: 13px; cursor: pointer; font-family: var(--font);
+    transition: background .18s;
+  }
+  .btn-skip:hover { background: var(--surface3); }
+
+  .goals-card {
+    margin: 12px 16px;
+    background: var(--surface);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+  }
+  .goal-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px; color: var(--text-mid);
+  }
+  .goal-item:last-child { border-bottom: none; }
+  .goal-cb {
+    width: 18px; height: 18px;
+    border-radius: 5px; border: 2px solid var(--brand);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; cursor: pointer;
+    transition: background .18s;
+  }
+  .goal-cb.checked { background: var(--brand); }
+
+  .srl-prompt-card {
+    margin: 0 16px 16px;
+    background: linear-gradient(135deg, #EBF0FF, #F0F4FF);
+    border: 1px solid var(--brand);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+  }
+  .srl-title { font-size: 12px; font-weight: 700; color: var(--brand); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .srl-q { font-size: 13px; color: var(--text-primary); margin-bottom: 10px; }
+  .srl-stars { display: flex; gap: 6px; }
+  .star {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--text-light);
+    cursor: pointer; transition: all .15s;
+  }
+  .star:hover, .star.active { background: var(--brand); color: white; border-color: var(--brand); }
+  .star.active { background: var(--accent); border-color: var(--accent); }
+
+  /* ────────────────────────────────────────────────
+     SCREEN 4 — ANALYTICS
+  ─────────────────────────────────────────────────*/
+  #screen-analytics { background: var(--bg); }
+  .metrics-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 8px; padding: 16px 16px 0;
+  }
+  .metric-tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 12px 8px;
+    text-align: center;
+  }
+  .metric-val { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+  .metric-lbl { font-size: 9px; color: var(--text-light); margin-top: 2px; text-transform: uppercase; letter-spacing: .3px; }
+  .metric-chg { font-size: 10px; font-weight: 600; margin-top: 4px; }
+  .metric-chg.up   { color: var(--accent-green); }
+  .metric-chg.down { color: var(--accent-red); }
+
+  .chart-card {
+    margin: 12px 16px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 14px;
+  }
+  .chart-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; display: flex; justify-content: space-between; }
+  .chart-legend { font-size: 11px; color: var(--text-light); display: flex; gap: 8px; }
+
+  .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 90px; }
+  .bar-wrap  { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .bar {
+    width: 100%; border-radius: 4px 4px 0 0;
+    background: var(--brand);
+    opacity: .7; min-height: 4px;
+    transition: opacity .2s;
+  }
+  .bar:hover { opacity: 1; }
+  .bar.today { background: var(--brand); opacity: 1; }
+  .bar-lbl { font-size: 9px; color: var(--text-light); }
+
+  .subject-list { padding: 0 16px 16px; }
+  .subject-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .subject-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .subject-name { font-size: 13px; font-weight: 600; color: var(--text-primary); flex: 1; }
+  .subject-bar-wrap { flex: 2; height: 6px; background: var(--surface3); border-radius: 99px; overflow: hidden; }
+  .subject-bar { height: 100%; border-radius: 99px; }
+  .subject-pct { font-size: 12px; font-weight: 700; color: var(--text-mid); min-width: 32px; text-align: right; }
+
+  /* ────────────────────────────────────────────────
+     SCREEN 5 — PROFILE
+  ─────────────────────────────────────────────────*/
+  #screen-profile { background: var(--bg); }
+  .profile-hero {
+    background: linear-gradient(135deg, var(--brand-dark), var(--brand));
+    padding: 24px 20px 32px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    flex-shrink: 0;
+  }
+  .profile-avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: rgba(255,255,255,.2);
+    border: 3px solid rgba(255,255,255,.5);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-size: 28px; color: white;
+  }
+  .profile-name { font-family: var(--serif); font-size: 22px; color: white; }
+  .profile-sub  { font-size: 12px; color: rgba(255,255,255,.65); }
+  .profile-stats {
+    display: flex; gap: 0;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: var(--r-md); overflow: hidden;
+    margin-top: 8px; width: 100%;
+  }
+  .profile-stat {
+    flex: 1; text-align: center; padding: 10px 4px;
+    border-right: 1px solid rgba(255,255,255,.15);
+  }
+  .profile-stat:last-child { border-right: none; }
+  .profile-stat-val { font-size: 18px; font-weight: 700; color: white; }
+  .profile-stat-lbl { font-size: 10px; color: rgba(255,255,255,.6); }
+
+  .badges-card {
+    margin: 14px 16px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 14px;
+  }
+  .badges-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+  .badge-item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    width: calc(25% - 8px);
+  }
+  .badge-icon {
+    width: 48px; height: 48px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    transition: transform .18s;
+  }
+  .badge-icon:hover { transform: scale(1.1); }
+  .badge-icon.earned { box-shadow: 0 4px 12px rgba(0,0,0,.12); }
+  .badge-icon.locked { filter: grayscale(1); opacity: .4; }
+  .badge-name { font-size: 9px; color: var(--text-light); text-align: center; font-weight: 600; }
+
+  /* SIMILARITY: all menu rows have identical style */
+  .menu-list { padding: 12px 16px 20px; display: flex; flex-direction: column; gap: 2px; }
+  .menu-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .menu-row:hover { background: var(--surface2); }
+  .menu-row-icon {
+    width: 32px; height: 32px; border-radius: 9px;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .menu-row-text { flex: 1; }
+  .menu-row-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .menu-row-sub   { font-size: 11px; color: var(--text-light); margin-top: 1px; }
+  .menu-chevron { color: var(--text-light); font-size: 16px; }
+
+  /* ────────────────────────────────────────────────
+     SCREEN 6 — SCHEDULE / ADD SESSION  (PROXIMITY)
+  ─────────────────────────────────────────────────*/
+  #screen-schedule { background: var(--bg); }
+  .form-card {
+    margin: 14px 16px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 16px;
+  }
+  .form-section { margin-bottom: 20px; }
+  .form-section:last-child { margin-bottom: 0; }
+  /* PROXIMITY: field label + input tightly grouped, sections spaced apart */
+  .form-group { margin-bottom: 14px; }
+  .form-label {
+    font-size: 12px; font-weight: 700; color: var(--text-mid);
+    text-transform: uppercase; letter-spacing: .5px;
+    margin-bottom: 6px; display: block;
+  }
+  .form-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 11px 14px;
+    font-size: 14px; font-weight: 500;
+    color: var(--text-primary);
+    font-family: var(--font);
+    outline: none; transition: border-color .18s;
+  }
+  .form-input:focus { border-color: var(--brand); }
+  .form-row { display: flex; gap: 10px; }
+  .form-row .form-group { flex: 1; }
+  .duration-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .duration-pill {
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: 99px; padding: 8px 14px;
+    font-size: 13px; font-weight: 600; color: var(--text-mid);
+    cursor: pointer; transition: all .15s;
+  }
+  .duration-pill.active, .duration-pill:hover { background: var(--brand); color: white; border-color: var(--brand); }
+
+  .subject-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .subject-chip {
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: 99px; padding: 7px 14px;
+    font-size: 12px; font-weight: 600; color: var(--text-mid);
+    cursor: pointer; transition: all .15s;
+  }
+  .subject-chip.active { background: #EBF0FF; color: var(--brand); border-color: var(--brand); }
+
+  .form-bottom { padding: 12px 16px 20px; }
+
+  /* ────────────────────────────────────────────────
+     SCREEN 7 — REFLECTION  (SHNEIDERMAN: INFORMATIVE)
+  ─────────────────────────────────────────────────*/
+  #screen-reflect { background: var(--bg); }
+  .reflect-hero {
+    background: linear-gradient(135deg, #78350F, #D97706);
+    padding: 20px 20px 24px; color: white; flex-shrink: 0;
+  }
+  .reflect-progress {
+    display: flex; gap: 4px; margin-bottom: 16px;
+  }
+  .rp-dot {
+    flex: 1; height: 4px; border-radius: 99px;
+    background: rgba(255,255,255,.3);
+  }
+  .rp-dot.done { background: white; }
+  .rp-dot.active { background: rgba(255,255,255,.7); }
+  .reflect-step { font-size: 11px; opacity: .7; margin-bottom: 4px; font-weight: 600; letter-spacing: .4px; text-transform: uppercase; }
+  .reflect-q { font-family: var(--serif); font-size: 22px; line-height: 1.3; }
+  .reflect-card-area { padding: 16px; flex: 1; }
+  .mood-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .mood-btn {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--r-md); padding: 14px 8px;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    cursor: pointer; transition: all .18s; font-family: var(--font);
+  }
+  .mood-btn:hover, .mood-btn.active { border-color: var(--accent); background: #FFF7ED; }
+  .mood-emoji { font-size: 28px; }
+  .mood-lbl { font-size: 10px; font-weight: 600; color: var(--text-light); }
+  .text-area {
+    width: 100%; height: 100px;
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--r-md); padding: 12px 14px;
+    font-size: 13px; color: var(--text-primary); font-family: var(--font);
+    resize: none; outline: none; margin-top: 12px;
+    transition: border-color .18s;
+  }
+  .text-area:focus { border-color: var(--accent); }
+
+  /* ────────────────────────────────────────────────
+     SCREEN 8 — FOCUS MODE  (MINIMALIST)
+  ─────────────────────────────────────────────────*/
+  #screen-focus {
+    background: #0D1117;
+  }
+  .focus-header {
+    padding: 16px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-shrink: 0;
+  }
+  .focus-subject { font-family: var(--serif); font-size: 18px; color: rgba(255,255,255,.8); }
+  .focus-exit {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 99px; padding: 6px 14px;
+    font-size: 12px; color: rgba(255,255,255,.6);
+    cursor: pointer; font-family: var(--font);
+  }
+  .focus-main {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0;
+    padding: 20px;
+  }
+  .focus-label { font-size: 11px; color: rgba(255,255,255,.35); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px; }
+  .focus-timer {
+    font-family: var(--serif); font-size: 80px;
+    color: white; letter-spacing: -2px; line-height: 1;
+  }
+  .focus-period { font-size: 16px; color: rgba(255,255,255,.4); margin-top: 8px; }
+  .focus-prog-wrap { width: 260px; height: 3px; background: rgba(255,255,255,.1); border-radius: 99px; margin-top: 32px; overflow: hidden; }
+  .focus-prog { height: 100%; background: rgba(255,255,255,.7); width: 65%; border-radius: 99px; }
+  .focus-controls {
+    display: flex; gap: 16px; align-items: center; margin-top: 40px;
+  }
+  .fc-btn {
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,.15);
+    background: rgba(255,255,255,.07);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 20px; color: rgba(255,255,255,.6);
+    transition: background .18s;
+  }
+  .fc-btn:hover { background: rgba(255,255,255,.14); }
+  .fc-btn-main {
+    width: 68px; height: 68px;
+    background: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; cursor: pointer;
+    box-shadow: 0 0 24px rgba(255,255,255,.15);
+    transition: transform .18s;
+  }
+  .fc-btn-main:hover { transform: scale(1.05); }
+  .focus-notes {
+    width: 100%; max-width: 300px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: var(--r-md); padding: 12px 14px;
+    font-size: 12px; color: rgba(255,255,255,.35);
+    margin-top: 24px; text-align: center;
+  }
+
+  /* ────────────────────────────────────────────────
+     SCREEN 9 — NAVIGATION DEMO
+  ─────────────────────────────────────────────────*/
+  #screen-nav-demo { background: var(--bg); }
+  .nav-demo-content { padding: 16px; }
+  .nav-demo-section { margin-bottom: 20px; }
+  .nav-demo-title { font-size: 13px; font-weight: 700; color: var(--text-mid); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+
+  .nav-map-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 16px; overflow: hidden;
+  }
+  .nav-flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .nav-node {
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--r-sm); padding: 8px 12px;
+    font-size: 12px; font-weight: 600; color: var(--text-mid);
+    cursor: pointer; transition: all .15s; white-space: nowrap;
+  }
+  .nav-node.main { background: var(--brand); color: white; border-color: var(--brand); }
+  .nav-node:hover { border-color: var(--brand); color: var(--brand); background: #EBF0FF; }
+  .nav-arrow { color: var(--text-light); font-size: 14px; }
+
+  .gesture-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 14px;
+  }
+  .gesture-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .gesture-row:last-child { border-bottom: none; }
+  .gesture-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--surface2); display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .gesture-text { flex: 1; }
+  .gesture-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .gesture-desc { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+  .gesture-demo {
+    font-size: 11px; font-weight: 600;
+    background: var(--surface2); color: var(--brand);
+    border-radius: 99px; padding: 4px 10px;
+  }
+
+  /* ────────────────────────────────────────────────
+     SCREEN 10 — ONBOARDING / BADGES
+  ─────────────────────────────────────────────────*/
+  #screen-onboard {
+    background: linear-gradient(160deg, #1E2F7A, #4F6EF7 100%);
+    align-items: center; justify-content: flex-start;
+    padding: 0;
+  }
+  .onboard-scroll {
+    flex: 1; overflow-y: auto; width: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 32px 24px 100px;
+    gap: 20px; scrollbar-width: none;
+  }
+  .onboard-scroll::-webkit-scrollbar { display: none; }
+  .onboard-header { text-align: center; }
+  .onboard-title { font-family: var(--serif); font-size: 30px; color: white; }
+  .onboard-sub   { font-size: 14px; color: rgba(255,255,255,.65); margin-top: 6px; max-width: 260px; line-height: 1.5; }
+
+  .badge-grid-full { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; }
+  .badge-card-big {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: var(--r-md); padding: 14px 8px;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    cursor: pointer; transition: transform .18s;
+    backdrop-filter: blur(8px);
+  }
+  .badge-card-big:hover { transform: translateY(-2px); }
+  .badge-card-big.locked { opacity: .35; }
+  .badge-card-big .emoji { font-size: 28px; }
+  .badge-card-big .lbl { font-size: 10px; color: rgba(255,255,255,.7); text-align: center; font-weight: 600; }
+
+  .gamification-card {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: var(--r-lg); padding: 20px;
+    width: 100%; backdrop-filter: blur(8px);
+  }
+  .xp-bar-wrap { height: 8px; background: rgba(255,255,255,.15); border-radius: 99px; margin: 12px 0; overflow: hidden; }
+  .xp-bar { height: 100%; background: var(--accent-green); border-radius: 99px; width: 68%; }
+  .xp-labels { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,.55); }
+  .xp-level { font-family: var(--serif); font-size: 20px; color: white; }
+
+  .streak-banner {
+    background: rgba(247,161,79,.15);
+    border: 1px solid rgba(247,161,79,.3);
+    border-radius: var(--r-md); padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px; width: 100%;
+  }
+  .streak-emoji { font-size: 32px; }
+  .streak-title { font-family: var(--serif); font-size: 20px; color: white; }
+  .streak-sub   { font-size: 12px; color: rgba(255,255,255,.6); }
+
+  .onboard-cta {
+    position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+    background: white; color: var(--brand);
+    padding: 14px 44px; border-radius: 99px;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer; border: none; font-family: var(--font);
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+    z-index: 20; white-space: nowrap;
+    transition: transform .18s;
+  }
+  .onboard-cta:hover { transform: translateX(-50%) scale(1.03); }
+
+  /* ── TRANSITIONS ───────────────────────────────── */
+  .screen { animation: none; }
+  .screen.active { animation: fadeIn .22s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ── ANNOTATION TOOLTIP ────────────────────────── */
+  .annot {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    background: rgba(79,110,247,.9);
+    color: white; font-size: 9px; font-weight: 700;
+    padding: 3px 7px; border-radius: 99px;
+    letter-spacing: .3px; white-space: nowrap;
+    pointer-events: none; z-index: 30;
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>StudyBuddy SRL</h1>
+  <p>High-Fidelity Prototype · INSY7311 · ST10307204 · Luis Jose De Sousa Junior</p>
+</div>
+
+<!-- NAV LABELS -->
+<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+  <span class="principle-label"><span class="dot">1</span>Splash</span>
+  <span class="principle-label"><span class="dot">2</span>Home — Scale/Hierarchy</span>
+  <span class="principle-label"><span class="dot">3</span>Study — Contrast</span>
+  <span class="principle-label"><span class="dot">4</span>Analytics — Balance</span>
+  <span class="principle-label"><span class="dot">5</span>Profile — Similarity</span>
+  <span class="principle-label"><span class="dot">6</span>Schedule — Proximity</span>
+  <span class="principle-label"><span class="dot">7</span>Reflection</span>
+  <span class="principle-label"><span class="dot">8</span>Focus Mode</span>
+  <span class="principle-label"><span class="dot">9</span>Navigation</span>
+  <span class="principle-label"><span class="dot">10</span>Badges</span>
+</div>
+
+<!-- PHONE -->
+<div class="phone-wrapper">
+  <div class="phone" id="phone">
+
+    <!-- STATUS BAR -->
+    <div class="status-bar" id="statusBar">
+      <div class="notch"></div>
+      <span style="padding-left:8px">9:41</span>
+      <div class="status-icons">
+        <svg width="16" height="12" viewBox="0 0 16 12"><rect x="0" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="4" y="2" width="3" height="10" rx="1" fill="currentColor"/><rect x="8" y="0" width="3" height="12" rx="1" fill="currentColor"/><rect x="12" y="0" width="3" height="12" rx="1" fill="currentColor" opacity=".3"/></svg>
+        <svg width="16" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.5C5.6 4.4 10.5 2 12 2s6.4 2.4 10.5 6.5l-2 2C17.1 7.1 14.4 5 12 5s-5.1 2.1-8.5 5.5l-2-2zm4 4C7.4 10.6 9.6 9 12 9s4.6 1.6 6.5 3.5l-2 2C15.1 13.1 13.6 12 12 12s-3.1 1.1-4.5 2.5l-2-2zM12 16a2 2 0 100 4 2 2 0 000-4z"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12"><rect x="0" y="1" width="22" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="2.5" width="16" height="7" rx="1.5" fill="currentColor"/><rect x="23" y="4" width="2" height="4" rx="1" fill="currentColor" opacity=".5"/></svg>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN 1: SPLASH ═══════════════════════ -->
+    <div class="screen active" id="screen-splash">
+      <div class="splash-logo">📚</div>
+      <div class="splash-title">StudyBuddy SRL</div>
+      <p class="splash-sub">Your self-regulated learning companion for academic excellence.</p>
+      <div class="splash-dots">
+        <span class="active"></span><span></span><span></span>
+      </div>
+      <button class="splash-cta" onclick="goTo('home')">Get Started →</button>
+    </div>
+
+    <!-- ══ SCREEN 2: HOME ═════════════════════════ -->
+    <div class="screen" id="screen-home">
+      <div class="home-hero">
+        <div class="home-hero-top">
+          <div>
+            <div class="home-greeting">Good afternoon</div>
+            <!-- T1 PRIMARY — largest -->
+            <div class="home-name">Alex Johnson</div>
+          </div>
+          <div class="home-avatar">AJ</div>
+        </div>
+        <!-- STATS: T2 SECONDARY size -->
+        <div class="home-stats">
+          <div class="home-stat">
+            <div class="home-stat-val">12</div>
+            <div class="home-stat-lbl">Day Streak</div>
+          </div>
+          <div class="home-stat">
+            <div class="home-stat-val">85%</div>
+            <div class="home-stat-lbl">Goal Hit</div>
+          </div>
+          <div class="home-stat">
+            <div class="home-stat-val">4.2h</div>
+            <div class="home-stat-lbl">Today</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen-scroll">
+        <!-- Reflection Prompt -->
+        <div class="home-section">
+          <div class="home-section-title">Daily Reflection</div>
+          <div class="reflection-card">
+            <div class="reflection-text">What surprised you yesterday?</div>
+            <button class="btn-reflect" onclick="goTo('reflect')">Reflect Now</button>
+          </div>
+        </div>
+
+        <!-- Sessions: T2 medium importance -->
+        <div class="home-section" style="margin-top:14px">
+          <div class="home-section-title">Today's Sessions</div>
+          <div class="session-card" onclick="goTo('study')">
+            <div>
+              <div class="session-name">Organic Chemistry</div>
+              <div class="session-time">2:00 PM · 30 min</div>
+            </div>
+            <div class="chevron">›</div>
+          </div>
+          <div class="session-card" onclick="goTo('study')">
+            <div>
+              <div class="session-name">Linear Algebra</div>
+              <div class="session-time">4:30 PM · 45 min</div>
+            </div>
+            <div class="chevron">›</div>
+          </div>
+          <div class="session-card" onclick="goTo('study')">
+            <div>
+              <div class="session-name">Psychology 101</div>
+              <div class="session-time">7:00 PM · 25 min</div>
+            </div>
+            <div class="chevron">›</div>
+          </div>
+        </div>
+
+        <!-- Quick Start: T3 smallest importance -->
+        <div class="home-section" style="margin-top:14px">
+          <div class="home-section-title">Quick Start</div>
+          <div class="quick-start">
+            <div class="qs-btn" onclick="goTo('study')">
+              <span class="icon">▶️</span>Free Study
+            </div>
+            <div class="qs-btn" onclick="goTo('focus')">
+              <span class="icon">🎯</span>Focus Mode
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM NAV -->
+      <div class="bottom-nav">
+        <button class="nav-item active" onclick="goTo('home')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          Home<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item" onclick="goTo('schedule')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Study<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item" onclick="goTo('analytics')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Analytics<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item" onclick="goTo('profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Profile<div class="nav-dot"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN 3: STUDY SESSION ════════════════ -->
+    <div class="screen" id="screen-study">
+      <div class="session-hero">
+        <button class="session-back" onclick="goTo('home')">‹ Back</button>
+        <div class="session-subject">Organic Chemistry</div>
+        <div class="session-chapter">Chapter 5 — Stereochemistry</div>
+      </div>
+      <div class="screen-scroll">
+        <div class="timer-ring-wrap">
+          <div class="timer-ring">
+            <svg class="timer-svg" width="160" height="160">
+              <circle class="timer-track" cx="80" cy="80" r="70"/>
+              <circle class="timer-prog" cx="80" cy="80" r="70" id="timerProg"/>
+            </svg>
+            <div class="timer-val" id="timerVal">29:15</div>
+            <div class="timer-sub">of 45 min</div>
+          </div>
+          <!-- CONTRAST: Primary (filled) vs Secondary (outlined) vs Ghost (muted) -->
+          <div class="timer-controls">
+            <button class="btn-restart" onclick="resetTimer()">↺ Restart</button>
+            <!-- PRIMARY — highest visual weight -->
+            <button class="btn-start" id="btnStartStop" onclick="toggleTimer()">
+              <span id="timerIcon">▶</span> <span id="timerLabel">Start</span>
+            </button>
+            <button class="btn-skip">⏭ Skip</button>
+          </div>
+        </div>
+
+        <!-- Session Goals -->
+        <div class="goals-card">
+          <div class="card-title">Session Goals</div>
+          <div class="goal-item" onclick="toggleGoal(this)">
+            <div class="goal-cb checked">✓</div> Review Chapter 5 notes
+          </div>
+          <div class="goal-item" onclick="toggleGoal(this)">
+            <div class="goal-cb"></div> Complete practice problems
+          </div>
+          <div class="goal-item" onclick="toggleGoal(this)">
+            <div class="goal-cb"></div> Summarise key concepts
+          </div>
+        </div>
+
+        <!-- SRL Prompt -->
+        <div class="srl-prompt-card">
+          <div class="srl-title">SRL Prompt</div>
+          <div class="srl-q">Rate your confidence (1–5) on today's topic:</div>
+          <div class="srl-stars">
+            <div class="star" onclick="rateStar(this,1)">1</div>
+            <div class="star" onclick="rateStar(this,2)">2</div>
+            <div class="star active" onclick="rateStar(this,3)">3</div>
+            <div class="star" onclick="rateStar(this,4)">4</div>
+            <div class="star" onclick="rateStar(this,5)">5</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="nav-item" onclick="goTo('home')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          Home<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item active" onclick="goTo('schedule')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Study<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item" onclick="goTo('analytics')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Analytics<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item" onclick="goTo('profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Profile<div class="nav-dot"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN 4: ANALYTICS ════════════════════ -->
+    <div class="screen" id="screen-analytics">
+      <div class="screen-header" style="background:var(--surface)">
+        <div class="screen-title">Analytics</div>
+        <div class="screen-sub">Your learning journey</div>
+      </div>
+      <div class="screen-scroll">
+        <!-- VISUAL BALANCE: 4 identical metric tiles -->
+        <div class="metrics-grid">
+          <div class="metric-tile">
+            <div class="metric-val">24.3h</div>
+            <div class="metric-lbl">Hours</div>
+            <div class="metric-chg up">↑ 8%</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-val">3.9</div>
+            <div class="metric-lbl">Efficiency</div>
+            <div class="metric-chg up">↑ 5%</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-val">18</div>
+            <div class="metric-lbl">Sessions</div>
+            <div class="metric-chg down">↓ 2%</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-val">+23%</div>
+            <div class="metric-lbl">Growth</div>
+            <div class="metric-chg up">↑ 11%</div>
+          </div>
+        </div>
+
+        <!-- Bar chart — full width for balance -->
+        <div class="chart-card">
+          <div class="chart-title">
+            <span>This Week</span>
+            <span class="chart-legend">
+              <span>📅 Daily Hours</span>
+            </span>
+          </div>
+          <div class="bar-chart">
+            <div class="bar-wrap"><div class="bar" style="height:40%"></div><div class="bar-lbl">Mo</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:65%"></div><div class="bar-lbl">Tu</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:55%"></div><div class="bar-lbl">We</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:75%"></div><div class="bar-lbl">Th</div></div>
+            <div class="bar-wrap"><div class="bar today" style="height:90%"></div><div class="bar-lbl">Fr</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:30%"></div><div class="bar-lbl">Sa</div></div>
+            <div class="bar-wrap"><div class="bar" style="height:20%"></div><div class="bar-lbl">Su</div></div>
+          </div>
+        </div>
+
+        <!-- Subject breakdown -->
+        <div class="chart-card" style="margin-top:10px">
+          <div class="chart-title"><span>By Subject</span></div>
+          <div>
+            <div class="subject-row">
+              <div class="subject-dot" style="background:#4F6EF7"></div>
+              <div class="subject-name">Chemistry</div>
+              <div class="subject-bar-wrap"><div class="subject-bar" style="width:78%;background:#4F6EF7"></div></div>
+              <div class="subject-pct">78%</div>
+            </div>
+            <div class="subject-row">
+              <div class="subject-dot" style="background:#F7A14F"></div>
+              <div class="subject-name">Algebra</div>
+              <div class="subject-bar-wrap"><div class="subject-bar" style="width:55%;background:#F7A14F"></div></div>
+              <div class="subject-pct">55%</div>
+            </div>
+            <div class="subject-row">
+              <div class="subject-dot" style="background:#3EC97B"></div>
+              <div class="subject-name">Psychology</div>
+              <div class="subject-bar-wrap"><div class="subject-bar" style="width:41%;background:#3EC97B"></div></div>
+              <div class="subject-pct">41%</div>
+            </div>
+            <div class="subject-row">
+              <div class="subject-dot" style="background:#F75A5A"></div>
+              <div class="subject-name">English</div>
+              <div class="subject-bar-wrap"><div class="subject-bar" style="width:28%;background:#F75A5A"></div></div>
+              <div class="subject-pct">28%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="nav-item" onclick="goTo('home')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          Home<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item" onclick="goTo('schedule')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Study<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item active" onclick="goTo('analytics')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Analytics<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item" onclick="goTo('profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Profile<div class="nav-dot"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN 5: PROFILE ══════════════════════ -->
+    <div class="screen" id="screen-profile">
+      <div class="profile-hero">
+        <div class="profile-avatar">AJ</div>
+        <div class="profile-name">Alex Johnson</div>
+        <div class="profile-sub">Psychology Yr 1 · Emeris Cape Town</div>
+        <div class="profile-stats">
+          <div class="profile-stat">
+            <div class="profile-stat-val">24.3h</div>
+            <div class="profile-stat-lbl">Study Time</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-val">18</div>
+            <div class="profile-stat-lbl">Sessions</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-val">3</div>
+            <div class="profile-stat-lbl">Badges</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen-scroll">
+        <div class="badges-card" style="margin:14px 16px 0">
+          <div class="card-title">Badges Earned</div>
+          <div class="badges-grid">
+            <div class="badge-item">
+              <div class="badge-icon earned" style="background:#FFF7ED">🔥</div>
+              <div class="badge-name">Streak Master</div>
+            </div>
+            <div class="badge-item">
+              <div class="badge-icon earned" style="background:#EBF0FF">⭐</div>
+              <div class="badge-name">Deep Thinker</div>
+            </div>
+            <div class="badge-item">
+              <div class="badge-icon earned" style="background:#E6FBF0">⚡</div>
+              <div class="badge-name">Early Bird</div>
+            </div>
+            <div class="badge-item">
+              <div class="badge-icon locked" style="background:#F3F4F6">🏆</div>
+              <div class="badge-name">Top Scholar</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIMILARITY: all menu rows have identical visual structure -->
+        <div class="menu-list">
+          <div class="menu-row" onclick="goTo('nav-demo')">
+            <div class="menu-row-icon">🔔</div>
+            <div class="menu-row-text">
+              <div class="menu-row-title">Notifications</div>
+              <div class="menu-row-sub">Session reminders, badges</div>
+            </div>
+            <div class="menu-chevron">›</div>
+          </div>
+          <div class="menu-row">
+            <div class="menu-row-icon">🎯</div>
+            <div class="menu-row-text">
+              <div class="menu-row-title">Goals &amp; Targets</div>
+              <div class="menu-row-sub">Weekly study targets</div>
+            </div>
+            <div class="menu-chevron">›</div>
+          </div>
+          <div class="menu-row">
+            <div class="menu-row-icon">📖</div>
+            <div class="menu-row-text">
+              <div class="menu-row-title">Study Preferences</div>
+              <div class="menu-row-sub">Pomodoro, session length</div>
+            </div>
+            <div class="menu-chevron">›</div>
+          </div>
+          <div class="menu-row">
+            <div class="menu-row-icon">⚙️</div>
+            <div class="menu-row-text">
+              <div class="menu-row-title">Settings</div>
+              <div class="menu-row-sub">Account, privacy, theme</div>
+            </div>
+            <div class="menu-chevron">›</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="nav-item" onclick="goTo('home')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          Home<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item" onclick="goTo('schedule')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Study<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item" onclick="goTo('analytics')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Analytics<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item active" onclick="goTo('profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Profile<div class="nav-dot"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN 6: SCHEDULE ════════════════════ -->
+    <div class="screen" id="screen-schedule">
+      <div class="screen-header">
+        <div class="screen-title">Schedule Session</div>
+        <div class="screen-sub">Plan your next study block</div>
+      </div>
+      <div class="screen-scroll">
+        <!-- PROXIMITY: fields grouped tightly; sections spaced apart -->
+        <div class="form-card">
+          <!-- GROUP 1: Subject info -->
+          <div class="form-section">
+            <div style="font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">📚 Subject</div>
+            <div class="subject-chips">
+              <span class="subject-chip active">Organic Chemistry</span>
+              <span class="subject-chip">Linear Algebra</span>
+              <span class="subject-chip">Psychology</span>
+              <span class="subject-chip">English</span>
+              <span class="subject-chip">+ Add</span>
+            </div>
+          </div>
+
+          <!-- GROUP 2: Time (tightly grouped) -->
+          <div class="form-section">
+            <div style="font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">🕐 Date &amp; Time</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="date" class="form-input" value="2026-05-29"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Start Time</label>
+                <input type="time" class="form-input" value="14:00"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- GROUP 3: Duration (tightly grouped) -->
+          <div class="form-section">
+            <div style="font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">⏱ Duration</div>
+            <div class="duration-pills">
+              <span class="duration-pill">15 min</span>
+              <span class="duration-pill">25 min</span>
+              <span class="duration-pill active">45 min</span>
+              <span class="duration-pill">60 min</span>
+              <span class="duration-pill">90 min</span>
+            </div>
+          </div>
+
+          <!-- GROUP 4: Goals (separate section, spaced from time) -->
+          <div class="form-section">
+            <div style="font-size:12px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">✅ Session Goals</div>
+            <div class="form-group">
+              <input type="text" class="form-input" placeholder="e.g. Review Chapter 5 notes"/>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-input" placeholder="e.g. Complete practice problems"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-bottom">
+          <button class="btn btn-primary" style="width:100%" onclick="goTo('study')">
+            ＋ Schedule Session
+          </button>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="nav-item" onclick="goTo('home')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          Home<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item active" onclick="goTo('schedule')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Study<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item" onclick="goTo('analytics')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Analytics<div class="nav-dot"></div>
+        </button>
+        <button class="nav-item" onclick="goTo('profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Profile<div class="nav-dot"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN 7: REFLECTION ═══════════════════ -->
+    <div class="screen" id="screen-reflect">
+      <div class="reflect-hero">
+        <div class="reflect-progress">
+          <div class="rp-dot done"></div>
+          <div class="rp-dot active"></div>
+          <div class="rp-dot"></div>
+          <div class="rp-dot"></div>
+        </div>
+        <div class="reflect-step">Step 2 of 4 — Post-Session Reflection</div>
+        <div class="reflect-q">How confident did you feel during today's session?</div>
+      </div>
+
+      <div class="screen-scroll">
+        <div class="reflect-card-area">
+          <div class="card-title" style="margin-bottom:14px">How are you feeling?</div>
+          <div class="mood-grid">
+            <div class="mood-btn active" onclick="selectMood(this)">
+              <div class="mood-emoji">😊</div>
+              <div class="mood-lbl">Confident</div>
+            </div>
+            <div class="mood-btn" onclick="selectMood(this)">
+              <div class="mood-emoji">😐</div>
+              <div class="mood-lbl">Neutral</div>
+            </div>
+            <div class="mood-btn" onclick="selectMood(this)">
+              <div class="mood-emoji">😔</div>
+              <div class="mood-lbl">Unsure</div>
+            </div>
+            <div class="mood-btn" onclick="selectMood(this)">
+              <div class="mood-emoji">😤</div>
+              <div class="mood-lbl">Frustrated</div>
+            </div>
+          </div>
+          <textarea class="text-area" placeholder="What was the most challenging part of today's session?..."></textarea>
+
+          <div style="display:flex;gap:10px;margin-top:16px">
+            <button class="btn btn-secondary btn-sm" style="flex:1" onclick="goTo('home')">← Back</button>
+            <button class="btn btn-primary btn-sm" style="flex:2" onclick="goTo('home')">Next Step →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN 8: FOCUS MODE ═══════════════════ -->
+    <div class="screen" id="screen-focus">
+      <div class="focus-header">
+        <div class="focus-subject">Organic Chemistry</div>
+        <button class="focus-exit" onclick="goTo('study')">✕ Exit</button>
+      </div>
+      <div class="focus-main">
+        <div class="focus-label">Focus Session Active</div>
+        <div class="focus-timer" id="focusTimer">25:00</div>
+        <div class="focus-period">Pomodoro · Block 2 of 4</div>
+        <div class="focus-prog-wrap">
+          <div class="focus-prog" id="focusProg"></div>
+        </div>
+        <div class="focus-controls">
+          <div class="fc-btn" onclick="goTo('study')">↩</div>
+          <div class="fc-btn-main" onclick="toggleFocus(this)">⏸</div>
+          <div class="fc-btn">⏭</div>
+        </div>
+        <div class="focus-notes">All notifications silenced · Deep work mode on</div>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN 9: NAV DEMO ═════════════════════ -->
+    <div class="screen" id="screen-nav-demo">
+      <div class="screen-header">
+        <div class="screen-title">Navigation &amp; Menus</div>
+        <div class="screen-sub">How StudyBuddy SRL is structured</div>
+      </div>
+      <div class="screen-scroll">
+        <div class="nav-demo-content">
+
+          <div class="nav-demo-section">
+            <div class="nav-demo-title">App Navigation Map</div>
+            <div class="nav-map-card">
+              <div style="font-size:12px;color:var(--text-light);margin-bottom:12px;">Tap any node to navigate to that screen</div>
+              <!-- Row 1 -->
+              <div class="nav-flow" style="margin-bottom:8px">
+                <div class="nav-node main" onclick="goTo('splash')">🚀 Splash</div>
+                <div class="nav-arrow">→</div>
+                <div class="nav-node main" onclick="goTo('home')">🏠 Home</div>
+              </div>
+              <!-- Row 2 -->
+              <div class="nav-flow" style="margin-bottom:8px">
+                <div style="width:32px;font-size:14px;color:var(--text-light)">└</div>
+                <div class="nav-node" onclick="goTo('study')">📖 Study</div>
+                <div class="nav-arrow">→</div>
+                <div class="nav-node" onclick="goTo('focus')">🎯 Focus</div>
+              </div>
+              <!-- Row 3 -->
+              <div class="nav-flow" style="margin-bottom:8px">
+                <div style="width:32px;font-size:14px;color:var(--text-light)">└</div>
+                <div class="nav-node" onclick="goTo('schedule')">📅 Schedule</div>
+                <div class="nav-arrow">→</div>
+                <div class="nav-node" onclick="goTo('reflect')">💭 Reflect</div>
+              </div>
+              <!-- Row 4 -->
+              <div class="nav-flow">
+                <div style="width:32px;font-size:14px;color:var(--text-light)">└</div>
+                <div class="nav-node" onclick="goTo('analytics')">📊 Analytics</div>
+                <div class="nav-arrow">·</div>
+                <div class="nav-node" onclick="goTo('profile')">👤 Profile</div>
+                <div class="nav-arrow">·</div>
+                <div class="nav-node" onclick="goTo('onboard')">🏅 Badges</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="nav-demo-section">
+            <div class="nav-demo-title">Gestures &amp; Interactions</div>
+            <div class="gesture-card">
+              <div class="gesture-row">
+                <div class="gesture-icon">👆</div>
+                <div class="gesture-text">
+                  <div class="gesture-name">Tap</div>
+                  <div class="gesture-desc">Navigate to screens, select items, confirm actions</div>
+                </div>
+                <div class="gesture-demo">Primary</div>
+              </div>
+              <div class="gesture-row">
+                <div class="gesture-icon">👈</div>
+                <div class="gesture-text">
+                  <div class="gesture-name">Swipe Left</div>
+                  <div class="gesture-desc">Delete session cards, dismiss notifications</div>
+                </div>
+                <div class="gesture-demo">Secondary</div>
+              </div>
+              <div class="gesture-row">
+                <div class="gesture-icon">📜</div>
+                <div class="gesture-text">
+                  <div class="gesture-name">Scroll Up/Down</div>
+                  <div class="gesture-desc">Browse sessions list, analytics history</div>
+                </div>
+                <div class="gesture-demo">Standard</div>
+              </div>
+              <div class="gesture-row">
+                <div class="gesture-icon">🔙</div>
+                <div class="gesture-text">
+                  <div class="gesture-name">Back Navigation</div>
+                  <div class="gesture-desc">Back button on sub-screens, swipe right on iOS</div>
+                </div>
+                <div class="gesture-demo">Standard</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="nav-demo-section">
+            <div class="nav-demo-title">Bottom Tab Bar</div>
+            <div class="card">
+              <p style="font-size:13px;color:var(--text-mid);line-height:1.5">
+                StudyBuddy SRL uses a persistent <strong>4-tab bottom navigation bar</strong> — Home, Study, Analytics, and Profile — allowing users to switch between primary sections from any screen. The active tab is highlighted with the brand colour and an indicator dot, following Norman's principle of <strong>Visibility of System Status</strong> to always show the user where they are in the application.
+              </p>
+            </div>
+          </div>
+
+          <div class="nav-demo-section">
+            <div style="display:flex;gap:10px">
+              <button class="btn btn-secondary btn-sm" onclick="goTo('home')">← Home</button>
+              <button class="btn btn-primary btn-sm" onclick="goTo('onboard')">View Badges →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN 10: BADGES / GAMIFICATION ══════ -->
+    <div class="screen" id="screen-onboard">
+      <div class="onboard-scroll">
+        <div class="onboard-header">
+          <div class="onboard-title">Your Achievements</div>
+          <p class="onboard-sub">Keep studying to unlock all badges and level up!</p>
+        </div>
+
+        <!-- XP / Level -->
+        <div class="gamification-card">
+          <div class="xp-level">⚡ Level 4 — Focused Learner</div>
+          <div class="xp-bar-wrap">
+            <div class="xp-bar"></div>
+          </div>
+          <div class="xp-labels">
+            <span>680 XP</span>
+            <span>1 000 XP to Level 5</span>
+          </div>
+        </div>
+
+        <!-- Streak -->
+        <div class="streak-banner">
+          <div class="streak-emoji">🔥</div>
+          <div>
+            <div class="streak-title">12-Day Streak!</div>
+            <div class="streak-sub">Study tomorrow to keep your streak alive</div>
+          </div>
+        </div>
+
+        <!-- Badge grid -->
+        <div style="width:100%">
+          <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">All Badges</div>
+          <div class="badge-grid-full">
+            <div class="badge-card-big"><div class="emoji">🔥</div><div class="lbl">Streak Master</div></div>
+            <div class="badge-card-big"><div class="emoji">⭐</div><div class="lbl">Deep Thinker</div></div>
+            <div class="badge-card-big"><div class="emoji">⚡</div><div class="lbl">Early Bird</div></div>
+            <div class="badge-card-big"><div class="emoji">📖</div><div class="lbl">Bookworm</div></div>
+            <div class="badge-card-big locked"><div class="emoji">🏆</div><div class="lbl">Top Scholar</div></div>
+            <div class="badge-card-big locked"><div class="emoji">💎</div><div class="lbl">Diamond</div></div>
+            <div class="badge-card-big locked"><div class="emoji">🧠</div><div class="lbl">Mind Palace</div></div>
+            <div class="badge-card-big locked"><div class="emoji">🌙</div><div class="lbl">Night Owl</div></div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="goTo('home')">
+          Back to Home
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /phone -->
+</div><!-- /phone-wrapper -->
+
+<!-- SCREEN SELECTOR BUTTONS -->
+<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:600px">
+  <button onclick="goTo('splash')"    style="border:none;background:rgba(255,255,255,.15);color:white;padding:8px 14px;border-radius:99px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;backdrop-filter:blur(8px)">1 Splash</button>
+  <button onclick="goTo('home')"      style="border:none;background:rgba(255,255,255,.15);color:white;padding:8px 14px;border-radius:99px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;backdrop-filter:blur(8px)">2 Home</button>
+  <button onclick="goTo('study')"     style="border:none;background:rgba(255,255,255,.15);color:white;padding:8px 14px;border-radius:99px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;backdrop-filter:blur(8px)">3 Study</button>
+  <button onclick="goTo('analytics')" style="border:none;background:rgba(255,255,255,.15);color:white;padding:8px 14px;border-radius:99px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;backdrop-filter:blur(8px)">4 Analytics</button>
+  <button onclick="goTo('profile')"   style="border:none;background:rgba(255,255,255,.15);color:white;padding:8px 14px;border-radius:99px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;backdrop-filter:blur(8px)">5 Profile</button>
+  <button onclick="goTo('schedule')"  style="border:none;background:rgba(255,255,255,.15);color:white;padding:8px 14px;border-radius:99px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;backdrop-filter:blur(8px)">6 Schedule</button>
+  <button onclick="goTo('reflect')"   style="border:none;background:rgba(255,255,255,.15);color:white;padding:8px 14px;border-radius:99px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;backdrop-filter:blur(8px)">7 Reflect</button>
+  <button onclick="goTo('focus')"     style="border:none;background:rgba(255,255,255,.15);color:white;padding:8px 14px;border-radius:99px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;backdrop-filter:blur(8px)">8 Focus</button>
+  <button onclick="goTo('nav-demo')"  style="border:none;background:rgba(255,255,255,.15);color:white;padding:8px 14px;border-radius:99px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;backdrop-filter:blur(8px)">9 Navigation</button>
+  <button onclick="goTo('onboard')"   style="border:none;background:rgba(255,255,255,.15);color:white;padding:8px 14px;border-radius:99px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;backdrop-filter:blur(8px)">10 Badges</button>
+</div>
+
+<div style="font-size:11px;color:rgba(255,255,255,.4);text-align:center;max-width:400px;line-height:1.5">
+  Use the buttons above or click interactive elements inside the phone to navigate between screens. All screens are fully clickable.
+</div>
+
+<script>
+/* ── NAVIGATION ─────────────────────────────── */
+const screenMap = {
+  splash:    'screen-splash',
+  home:      'screen-home',
+  study:     'screen-study',
+  analytics: 'screen-analytics',
+  profile:   'screen-profile',
+  schedule:  'screen-schedule',
+  reflect:   'screen-reflect',
+  focus:     'screen-focus',
+  'nav-demo':'screen-nav-demo',
+  onboard:   'screen-onboard',
+};
+
+const navMap = {
+  home:      0, study: 1, schedule: 1,
+  analytics: 2, profile: 3, 'nav-demo': 3,
+  onboard:   3,
+};
+
+function goTo(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const s = document.getElementById(screenMap[name]);
+  if (s) s.classList.add('active');
+
+  // Update status bar bg for dark screens
+  const sb = document.getElementById('statusBar');
+  if (name === 'focus' || name === 'splash' || name === 'onboard') {
+    sb.style.background = 'transparent';
+    sb.style.color = 'rgba(255,255,255,.7)';
+  } else if (name === 'reflect') {
+    sb.style.background = 'transparent';
+    sb.style.color = 'rgba(255,255,255,.7)';
+  } else {
+    sb.style.background = 'var(--surface)';
+    sb.style.color = 'var(--text-mid)';
+  }
+
+  // Update nav highlights
+  const allNavs = document.querySelectorAll('.bottom-nav');
+  allNavs.forEach(nav => {
+    const items = nav.querySelectorAll('.nav-item');
+    const idx = navMap[name] ?? -1;
+    items.forEach((item, i) => {
+      item.classList.toggle('active', i === idx);
+    });
+  });
+}
+
+/* ── TIMER ──────────────────────────────────── */
+let timerRunning = false;
+let timerSeconds = 29 * 60 + 15;
+let timerInterval = null;
+
+function toggleTimer() {
+  timerRunning = !timerRunning;
+  const btn = document.getElementById('btnStartStop');
+  const icon = document.getElementById('timerIcon');
+  const lbl  = document.getElementById('timerLabel');
+  if (timerRunning) {
+    icon.textContent = '⏸';
+    lbl.textContent  = 'Pause';
+    btn.style.background = '#D97706';
+    timerInterval = setInterval(tickTimer, 1000);
+  } else {
+    icon.textContent = '▶';
+    lbl.textContent  = 'Start';
+    btn.style.background = 'var(--brand)';
+    clearInterval(timerInterval);
+  }
+}
+
+function resetTimer() {
+  timerRunning = false;
+  clearInterval(timerInterval);
+  timerSeconds = 29 * 60 + 15;
+  document.getElementById('timerVal').textContent = '29:15';
+  document.getElementById('timerProg').style.strokeDashoffset = 110;
+  const icon = document.getElementById('timerIcon');
+  const lbl  = document.getElementById('timerLabel');
+  const btn  = document.getElementById('btnStartStop');
+  icon.textContent = '▶'; lbl.textContent = 'Start';
+  btn.style.background = 'var(--brand)';
+}
+
+function tickTimer() {
+  if (timerSeconds <= 0) { clearInterval(timerInterval); return; }
+  timerSeconds--;
+  const m = Math.floor(timerSeconds / 60);
+  const s = timerSeconds % 60;
+  document.getElementById('timerVal').textContent =
+    String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  const total = 45 * 60;
+  const prog = 1 - (timerSeconds / total);
+  document.getElementById('timerProg').style.strokeDashoffset = 440 - (440 * prog);
+}
+
+/* ── GOAL TOGGLE ────────────────────────────── */
+function toggleGoal(el) {
+  const cb = el.querySelector('.goal-cb');
+  cb.classList.toggle('checked');
+  cb.textContent = cb.classList.contains('checked') ? '✓' : '';
+}
+
+/* ── STAR RATING ────────────────────────────── */
+function rateStar(el, val) {
+  const stars = el.parentElement.querySelectorAll('.star');
+  stars.forEach((s, i) => s.classList.toggle('active', i < val));
+}
+
+/* ── MOOD SELECT ────────────────────────────── */
+function selectMood(el) {
+  el.closest('.mood-grid').querySelectorAll('.mood-btn')
+    .forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* ── FOCUS TOGGLE ───────────────────────────── */
+function toggleFocus(btn) {
+  btn.textContent = btn.textContent === '⏸' ? '▶' : '⏸';
+}
+
+/* ── DURATION PILLS ─────────────────────────── */
+document.querySelectorAll('.duration-pill').forEach(p => {
+  p.addEventListener('click', function() {
+    this.closest('.duration-pills').querySelectorAll('.duration-pill')
+      .forEach(x => x.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+/* ── SUBJECT CHIPS ──────────────────────────── */
+document.querySelectorAll('.subject-chip').forEach(c => {
+  c.addEventListener('click', function() {
+    this.closest('.subject-chips').querySelectorAll('.subject-chip')
+      .forEach(x => x.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
