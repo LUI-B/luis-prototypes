@@ -1,169 +1,507 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Luis De Sousa - Project Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
-<style>
-  :root{
-    --bg:#0d1b6b;
-    --bg-2:#1a2f8a;
-    --bg-3:#2d4bac;
-    --surface:#ffffff;
-    --brand:#4F6EF7;
-    --accent:#F7A14F;
-    --text-mid:#4B5563;
-    --text-light:#9CA3AF;
-    --font:'DM Sans', sans-serif;
-    --serif:'DM Serif Display', serif;
-  }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  body{
-    font-family:var(--font);
-    background:linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
-    min-height:100vh;
-    color:white;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:48px 20px 80px;
-  }
-  .header{ text-align:center; max-width:480px; margin-bottom:36px; }
-  .eyebrow{
-    display:inline-block;
-    font-size:11px;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.22);
-    padding:5px 14px;
-    border-radius:99px;
-    margin-bottom:16px;
-    color:rgba(255,255,255,.85);
-  }
-  .avatar{
-    width:88px;
-    height:88px;
-    border-radius:50%;
-    object-fit:cover;
-    border:3px solid rgba(255,255,255,.5);
-    box-shadow:0 6px 18px rgba(0,0,0,.3);
-    margin-bottom:14px;
-  }
-  h1{ font-family:var(--serif); font-size:32px; letter-spacing:-0.5px; }
-  .sub{ font-size:14px; color:rgba(255,255,255,.65); margin-top:10px; line-height:1.5; }
-
-  .list{ width:100%; max-width:420px; display:flex; flex-direction:column; gap:16px; }
-
-  .card{
-    display:block;
-    text-decoration:none;
-    background:var(--surface);
-    border-radius:20px;
-    padding:20px 20px 22px;
-    box-shadow:0 8px 30px rgba(0,0,0,.25);
-    position:relative;
-    overflow:hidden;
-    transition:transform .15s ease;
-  }
-  .card:active{ transform:scale(.98); }
-  .card-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
-  .card-tag{
-    font-size:10px;
-    font-weight:700;
-    letter-spacing:.6px;
-    text-transform:uppercase;
-    color:var(--brand);
-    background:#EEF1FC;
-    padding:4px 10px;
-    border-radius:99px;
-  }
-  .card h2{
-    font-family:var(--serif);
-    color:#111827;
-    font-size:20px;
-    margin-top:12px;
-  }
-  .card p{
-    font-size:13px;
-    color:var(--text-mid);
-    margin-top:6px;
-    line-height:1.5;
-  }
-  .card-cta{
-    margin-top:14px;
-    display:flex;
-    align-items:center;
-    gap:6px;
-    font-size:13px;
-    font-weight:600;
-    color:var(--brand);
-  }
-  .card-cta svg{ width:14px; height:14px; }
-
-  .card.disabled{
-    opacity:.55;
-    pointer-events:none;
-  }
-  .card.disabled .card-cta{ color:var(--text-light); }
-
-  footer{
-    margin-top:44px;
-    text-align:center;
-    font-size:12px;
-    color:rgba(255,255,255,.45);
-  }
-</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLU POWER ENERGY | Soluções Energéticas Sustentáveis</title>
+<meta name="description" content="Empresa moçambicana especializada em energias renováveis, armazenamento de energia e consultoria técnica. Transformamos energia em valor financeiro.">
+<link rel="icon" href="images/favicon.png" type="image/png">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <div class="header">
-    <span class="eyebrow">IT Student · Portfolio</span>
-    <img class="avatar" src="data:image/jpeg;base64,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" alt="Luis De Sousa Junior"/>
-    <h1>Luis De Sousa Junior</h1>
-    <p class="sub">Emerging full-stack developer and IT student specialising in ASP.NET Core, secure API design, and mobile-first UI/UX. I build production-style systems from Dockerised enterprise platforms to polished interactive prototypes with close attention to usability and real-world engineering practice.</p>
-  </div>
-
-  <div class="list">
-
-    <a class="card" href="studybuddy.html">
-      <div class="card-top">
-        <span class="card-tag">Mobile App · UI/UX</span>
-      </div>
-      <h2>StudyBuddy SRL</h2>
-      <p>High-fidelity mobile prototype for a student study-planning app. Built as part of a usability &amp; interaction design project.</p>
-      <div class="card-cta">
-        Open prototype
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </div>
-    </a>
-
-    <a class="card" href="https://youtu.be/uJKjhIzZmCI" target="_blank" rel="noopener">
-      <div class="card-top">
-        <span class="card-tag">Full-Stack · Enterprise System</span>
-      </div>
-      <h2>GLMS - Global Logistics Management System</h2>
-      <p>Enterprise-grade logistics platform for TechMove Logistics, ASP.NET Core MVC frontend, JWT-secured Web API, SQL Server, fully Dockerised with CI/CD. Watch the demo video below.</p>
-      <div class="card-cta">
-        Watch demo video
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </div>
-    </a>
-
-    <div class="card disabled">
-      <div class="card-top">
-        <span class="card-tag">Coming soon</span>
-      </div>
-      <h2>More projects</h2>
-      <p>Additional prototypes will be added here as they're ready.</p>
-      <div class="card-cta">Check back soon</div>
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="wrap nav-row">
+    <div class="brand">
+      <img src="images/logo-icon.jpg" alt="Blu Power Energy">
+      <div class="brand-text">BLU POWER<span>ENERGY</span></div>
     </div>
-
+    <ul class="nav-links" id="navLinks">
+      <li><button data-page="home" class="active">Home</button></li>
+      <li><button data-page="about">Perfil da Empresa</button></li>
+      <li><button data-page="services">Serviços</button></li>
+      <li><button data-page="projects">Projetos</button></li>
+      <li><button data-page="contact">Contacto</button></li>
+    </ul>
+    <button class="nav-cta" data-page="contact">Fale Connosco</button>
+    <button class="nav-burger" id="burgerBtn" aria-label="Menu">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><path d="M0 1H18" stroke="currentColor" stroke-width="1.6"/><path d="M0 7H18" stroke="currentColor" stroke-width="1.6"/><path d="M0 13H18" stroke="currentColor" stroke-width="1.6"/></svg>
+    </button>
   </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button data-page="home" class="active">Home</button>
+  <button data-page="about">Perfil da Empresa</button>
+  <button data-page="services">Serviços</button>
+  <button data-page="projects">Projetos</button>
+  <button data-page="contact">Contacto</button>
+</div>
 
-  <footer>Luis De Sousa Junior · Emeris Cape Town · ST10307204</footer>
+<!-- ============ HOME ============ -->
+<main id="page-home" class="page active">
 
+  <section class="hero">
+    <img class="hero-mark" src="images/blupower-logo-solid.png" alt="">
+    <div class="hero-wrap">
+      <div class="hero-grid">
+        <div class="hero-kicker">Energia · Moçambique</div>
+        <h1>Transformamos<br>Energia em <em>Valor<br>Financeiro</em></h1>
+        <p class="lede">A BLU POWER é uma empresa moçambicana especializada no desenvolvimento e implementação de soluções energéticas sustentáveis e de alta eficiência — de energias renováveis a armazenamento, consultoria técnica e gestão integrada de projetos.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" data-page="services">Ver Serviços
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M1 6H15M15 6L10 1M15 6L10 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="btn btn-ghost" data-page="contact">Fale Connosco</button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><b>7</b><span>Pilares de Valores</span></div>
+          <div class="stat"><b>6</b><span>Áreas de Serviço</span></div>
+          <div class="stat"><b>5</b><span>Tipos de Sistemas FV</span></div>
+          <div class="stat"><b>100%</b><span>Foco em ROI</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- diferencial -->
+  <section class="section">
+    <div class="wrap">
+      <div class="value-strip">
+        <div class="orb-stage orb-diferencial">
+          <div class="orb-glow"></div>
+          <div class="orb-ring"></div>
+          <img class="orb-img" src="images/globe-panel.jpg" alt="Energia solar aplicada globalmente">
+        </div>
+        <div class="eyebrow">Nosso Diferencial</div>
+        <h2 style="max-width:20ch;">Projetos energéticos devem ser investimentos rentáveis, não apenas despesas de capital.</h2>
+        <p class="lede" style="margin-top:14px; color:#c3cfe6;">Cada solução é desenvolvida com base em análises técnicas e financeiras rigorosas para garantir benefícios concretos e sustentáveis.</p>
+        <div class="value-list">
+          <div class="value-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8L6 12L14 4" stroke="#5FD4F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Redução dos custos de eletricidade</div>
+          <div class="value-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8L6 12L14 4" stroke="#5FD4F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Redução do consumo de combustíveis fósseis</div>
+          <div class="value-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8L6 12L14 4" stroke="#5FD4F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Maior segurança energética</div>
+          <div class="value-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8L6 12L14 4" stroke="#5FD4F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Aumento da eficiência operacional</div>
+          <div class="value-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8L6 12L14 4" stroke="#5FD4F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Maior previsibilidade dos custos energéticos</div>
+          <div class="value-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8L6 12L14 4" stroke="#5FD4F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Retornos atrativos sobre o investimento (ROI)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- process -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Nosso Processo</div>
+        <h2>Da ideia à entrega, num percurso claro</h2>
+        <p class="lede" style="margin-top:14px;">A vantagem de uma consulta pré-construção resulta em aconselhamento profissional de engenharia, com alta qualidade e valor em cada etapa.</p>
+      </div>
+      <div class="timeline">
+        <div class="tl-step"><div class="tl-num">01</div><h4>Contacte-nos</h4><p>Conte-nos sobre a sua necessidade energética.</p></div>
+        <div class="tl-step"><div class="tl-num">02</div><h4>Idealização do Projeto</h4><p>Avaliação conjunta dos objetivos e viabilidade.</p></div>
+        <div class="tl-step"><div class="tl-num">03</div><h4>Desenho de Infraestrutura</h4><p>Engenharia e dimensionamento técnico detalhado.</p></div>
+        <div class="tl-step"><div class="tl-num">04</div><h4>Construção</h4><p>Instalação e comissionamento com elevados padrões.</p></div>
+        <div class="tl-step"><div class="tl-num">05</div><h4>Entrega</h4><p>Sistema operacional, com suporte contínuo.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- services preview -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">O Que Fazemos</div>
+        <h2>Soluções energéticas de ponta a ponta</h2>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="icon-badge"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2V5M10 15V18M18 10H15M5 10H2M15.5 4.5L13.3 6.7M6.7 13.3L4.5 15.5M15.5 15.5L13.3 13.3M6.7 6.7L4.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="10" r="3.5" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <h3>Avaliação Energética</h3>
+          <p>Auditorias e estudos de viabilidade técnica e financeira para maximizar o retorno sobre o investimento.</p>
+        </div>
+        <div class="card">
+          <div class="icon-badge"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 17V8L10 3L17 8V17H12V12H8V17H3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+          <h3>Projeto e Instalação</h3>
+          <p>Soluções energéticas adaptadas às necessidades específicas de cada cliente, com eficiência e qualidade.</p>
+        </div>
+        <div class="card">
+          <div class="icon-badge"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="6" width="14" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 10L9.5 12L12.5 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3>Armazenamento (Baterias)</h3>
+          <p>Sistemas de backup, gestão de picos e integração com energias renováveis para maior segurança energética.</p>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:40px;">
+        <button class="btn btn-ghost" data-page="services">Ver todos os serviços</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <h2>Pronto para transformar a sua energia em valor?</h2>
+      <p style="margin-left:auto; margin-right:auto;">Fale com a nossa equipa e receba uma consulta pré-construção com aconselhamento técnico especializado.</p>
+      <button class="btn btn-primary" data-page="contact">Contacte-nos</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ ABOUT ============ -->
+<main id="page-about" class="page">
+  <section class="page-head">
+    <div class="wrap">
+      <div class="page-head-row">
+        <div>
+          <div class="eyebrow">Renewable Energy · Moçambique</div>
+          <h1>Sobre Nós</h1>
+        </div>
+        <div class="page-head-side">
+          <p>Uma empresa moçambicana a transformar o modo como empresas e comunidades pensam sobre energia — da avaliação técnica à entrega financeira.</p>
+        </div>
+      </div>
+      <div class="head-rule"></div>
+    </div>
+  </section>
+
+  <section class="section" style="border-top:none;">
+    <div class="wrap about-lead">
+      <div>
+        <p>A <strong style="color:var(--white)">BLU POWER</strong> é uma empresa moçambicana especializada no desenvolvimento e implementação de soluções energéticas sustentáveis e de alta eficiência. Atuamos nas áreas de energias renováveis, armazenamento de energia, fornecimento de equipamentos e materiais elétricos, consultoria técnica especializada e gestão integrada de projetos energéticos.</p>
+        <p>Combinamos inovação, tecnologia e experiência para oferecer soluções personalizadas que respondem aos desafios energéticos de empresas, instituições públicas, organizações e comunidades em todo o país. O nosso objetivo é garantir um fornecimento de energia mais fiável, eficiente e economicamente sustentável.</p>
+        <p>Desde a fase de avaliação e conceção até ao fornecimento, instalação, comissionamento e manutenção dos sistemas, a BLU POWER assegura elevados padrões de qualidade, segurança e desempenho — trabalhando com tecnologias de última geração para maximizar a eficiência operacional e proporcionar um retorno sólido e duradouro sobre o investimento.</p>
+
+        <div class="about-fact">
+          <b>360°</b>
+          <span>Da avaliação e conceção ao fornecimento, instalação, comissionamento e manutenção — tudo sob um único parceiro.</span>
+        </div>
+        <div class="about-fact">
+          <b>ROI</b>
+          <span>Cada solução nasce de análises técnicas e financeiras rigorosas, com foco em retorno sobre o investimento.</span>
+        </div>
+      </div>
+      <div>
+        <div class="orb-stage orb-about">
+          <div class="orb-glow"></div>
+          <div class="orb-ring"></div>
+          <img class="orb-img" src="images/globe-panel.jpg" alt="Energia solar aplicada globalmente">
+        </div>
+        <div class="about-orb-caption">
+          <span>Energia à Escala Global</span>
+          <p>Soluções pensadas em Moçambique, construídas com padrões internacionais.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="vm-grid">
+        <div class="vm-card">
+          <div class="eyebrow">Visão</div>
+          <p>Ser uma referência em Moçambique e na África Austral no desenvolvimento de soluções energéticas e elétricas, reconhecida pela excelência técnica, confiança e capacidade de gerar valor para os seus clientes.</p>
+        </div>
+        <div class="vm-card">
+          <div class="eyebrow">Missão</div>
+          <p>Fornecer soluções energéticas inovadoras, sustentáveis e financeiramente viáveis, contribuindo para o crescimento dos nossos clientes e para a transição energética de Moçambique.</p>
+        </div>
+      </div>
+
+      <div class="eyebrow" style="margin-top:56px;">Valores</div>
+      <h2 style="margin-bottom:30px;">O que guia cada decisão</h2>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="v-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L14 4V8C14 11.5 11.5 14.2 8 15C4.5 14.2 2 11.5 2 8V4L8 1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+          <h4>Integridade</h4><p>Atuamos com honestidade, transparência e profissionalismo em todas as nossas atividades.</p>
+        </div>
+        <div class="value-card">
+          <div class="v-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10 6L15 6.5L11.2 9.8L12.2 14.5L8 12L3.8 14.5L4.8 9.8L1 6.5L6 6L8 1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+          <h4>Excelência</h4><p>Procuramos os mais elevados padrões de qualidade em engenharia, execução e atendimento.</p>
+        </div>
+        <div class="value-card">
+          <div class="v-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M9 1L3 9H7.5L6.5 15L13 6.5H8.5L9 1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+          <h4>Inovação</h4><p>Desenvolvemos soluções inteligentes e eficientes para os desafios energéticos dos clientes.</p>
+        </div>
+        <div class="value-card">
+          <div class="v-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L14 3.5V7.5C14 11 11.5 13.5 8 14.5C4.5 13.5 2 11 2 7.5V3.5L8 1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 8L7.5 9.5L10.5 6.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h4>Segurança</h4><p>Priorizamos a saúde e segurança dos nossos colaboradores, parceiros e clientes.</p>
+        </div>
+        <div class="value-card">
+          <div class="v-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14C8 14 2 10.5 2 6.5C2 4.5 3.5 3 5.5 3C6.5 3 7.5 3.5 8 4.3C8.5 3.5 9.5 3 10.5 3C12.5 3 14 4.5 14 6.5C14 10.5 8 14 8 14Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+          <h4>Sustentabilidade</h4><p>Promovemos tecnologias e práticas ambientalmente responsáveis.</p>
+        </div>
+        <div class="value-card">
+          <div class="v-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 13L6 4L9 10L11 6L14 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h4>Responsabilidade</h4><p>Assumimos os nossos compromissos e focamo-nos na obtenção de resultados concretos.</p>
+        </div>
+        <div class="value-card">
+          <div class="v-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M2.5 14C3 11 5.2 10 8 10C10.8 10 13 11 13.5 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+          <h4>Orientação para o Cliente</h4><p>Construímos relações duradouras através da compreensão das necessidades de cada cliente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ SERVICES ============ -->
+<main id="page-services" class="page">
+  <section class="page-head">
+    <div class="wrap">
+      <div class="page-head-row">
+        <div>
+          <div class="eyebrow">O Que Fazemos</div>
+          <h1>Nossos Serviços</h1>
+        </div>
+        <div class="page-head-side">
+          <p>Da avaliação inicial à manutenção contínua — uma abordagem completa para cada projeto energético.</p>
+        </div>
+      </div>
+      <div class="head-rule"></div>
+    </div>
+  </section>
+
+  <section class="section" style="border-top:none;">
+    <div class="wrap">
+      <div class="grid-3">
+        <div class="card"><span class="num">01</span><h3>Avaliação Energética e Estudo de Viabilidade</h3><p>Auditorias energéticas, análises de consumo e estudos de viabilidade técnica e financeira para identificar as melhores soluções e maximizar o retorno sobre o investimento.</p></div>
+        <div class="card"><span class="num">02</span><h3>Projeto e Instalação</h3><p>Desenvolvemos, dimensionamos e implementamos soluções energéticas adaptadas às necessidades de cada cliente, garantindo eficiência e desempenho a longo prazo.</p></div>
+        <div class="card"><span class="num">03</span><h3>Monitorização e Gestão Inteligente</h3><p>Sistemas avançados de monitorização e gestão energética que permitem acompanhar o desempenho dos ativos em tempo real e reduzir custos operacionais.</p></div>
+        <div class="card"><span class="num">04</span><h3>Equipamentos & Componentes Energéticos</h3><p>Fornecimento de equipamentos elétricos de elevada qualidade: painéis solares, inversores, baterias, transformadores, cabos e sistemas de proteção.</p></div>
+        <div class="card"><span class="num">05</span><h3>Soluções Híbridas e Off-Grid</h3><p>Sistemas híbridos e isolados que integram energia renovável, armazenamento e geração convencional para fornecimento fiável e contínuo.</p></div>
+        <div class="card"><span class="num">06</span><h3>Operação, Manutenção e Suporte Técnico</h3><p>Manutenção preventiva e corretiva, monitorização contínua, diagnóstico de falhas e assistência técnica especializada.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <div class="eyebrow">Fotovoltaico</div>
+        <h2 style="margin-bottom:20px;">Tipos de Sistemas Solares</h2>
+        <ul class="sys-list">
+          <li><span class="sys-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1V3M7 11V13M13 7H11M3 7H1M11.2 2.8L9.8 4.2M4.2 9.8L2.8 11.2M11.2 11.2L9.8 9.8M4.2 4.2L2.8 2.8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="7" r="2.4" stroke="currentColor" stroke-width="1.3"/></svg></span>Sistemas Ligados à Rede (On-Grid)</li>
+          <li><span class="sys-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="4" width="10" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M5 6L6.3 7.5L9 4.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sistemas Isolados (Off-Grid)</li>
+          <li><span class="sys-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L2 8H6.5L5.5 13L11 5.5H7.5L7 1Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>Sistemas Híbridos</li>
+          <li><span class="sys-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="2" width="4.5" height="10" rx="0.8" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="5" width="4.5" height="7" rx="0.8" stroke="currentColor" stroke-width="1.2"/></svg></span>Soluções Comerciais e Industriais (C&amp;I)</li>
+          <li><span class="sys-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 7H12.5M7 1.5V12.5" stroke="currentColor" stroke-width="1.1"/></svg></span>Projetos de Grande Escala (Utility Scale)</li>
+        </ul>
+      </div>
+      <img src="images/rooftop-industrial.jpg" alt="Sistema solar comercial instalado em telhado" style="border-radius:16px; border:1px solid var(--line);">
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap split">
+      <img src="images/battery-room1.jpg" alt="Sala de armazenamento de baterias" style="border-radius:16px; border:1px solid var(--line);">
+      <div>
+        <div class="eyebrow">Armazenamento</div>
+        <h2 style="margin-bottom:20px;">Sistemas de Armazenamento de Energia</h2>
+        <p style="margin-bottom:20px;">Os sistemas de armazenamento desempenham um papel fundamental na melhoria da fiabilidade energética e na otimização do consumo. A BLU POWER projeta e implementa soluções adaptadas às necessidades específicas de cada cliente.</p>
+        <div class="tag-list">
+          <span class="tag">Backup Energético</span>
+          <span class="tag">Load Shifting</span>
+          <span class="tag">Otimização de Geradores</span>
+          <span class="tag">Microgrids</span>
+          <span class="tag">Redução de Diesel</span>
+          <span class="tag">Maior Independência</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Consultoria</div>
+        <h2>Consultoria & Gestão de Projetos</h2>
+      </div>
+      <div class="grid-2">
+        <div class="card"><h3>Consultoria Técnica</h3><p>Consultoria em energias renováveis e eficiência energética, com auditorias e análises de desempenho.</p></div>
+        <div class="card"><h3>Gestão de Projetos</h3><p>Gestão e supervisão de projetos, com apoio técnico em concursos, aquisições e implementação.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ PROJECTS ============ -->
+<main id="page-projects" class="page">
+  <section class="page-head">
+    <div class="wrap">
+      <div class="page-head-row">
+        <div>
+          <div class="eyebrow">Portfólio</div>
+          <h1>Projetos</h1>
+        </div>
+      </div>
+      <div class="head-rule"></div>
+      <div class="project-stats">
+        <div class="stat"><b>11</b><span>Instalações Apresentadas</span></div>
+        <div class="stat"><b>3</b><span>Categorias</span></div>
+        <div class="stat"><b>5</b><span>Tipos de Sistema</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="border-top:none;">
+    <div class="wrap">
+
+      <div class="filter-row" id="filterRow">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="solar">Sistemas Solares</button>
+        <button class="filter-btn" data-filter="storage">Armazenamento</button>
+        <button class="filter-btn" data-filter="maintenance">Manutenção &amp; Material</button>
+      </div>
+
+      <div class="gallery" id="gallery">
+        <div class="g-item" data-filter="solar" data-caption="Instalação industrial em telhado, com fornecimento contínuo para operações comerciais.">
+          <img src="images/rooftop-industrial.jpg" alt="Instalação solar em telhado industrial">
+          <div class="g-caption"><span>On-Grid · Comercial</span><p>Cobertura Industrial</p></div>
+        </div>
+        <div class="g-item" data-filter="solar" data-caption="Sistema residencial de telhado com vista para as montanhas — instalação discreta e eficiente.">
+          <img src="images/rooftop-residential.jpg" alt="Instalação solar residencial">
+          <div class="g-caption"><span>On-Grid · Residencial</span><p>Telhado Residencial</p></div>
+        </div>
+        <div class="g-item" data-filter="solar" data-caption="Estrutura de carport solar, gerando energia enquanto protege veículos.">
+          <img src="images/carport.jpg" alt="Carport solar em estacionamento">
+          <div class="g-caption"><span>C&amp;I</span><p>Carport Solar</p></div>
+        </div>
+        <div class="g-item" data-filter="solar" data-caption="Projeto de grande escala com fileiras extensas de painéis montados no solo.">
+          <img src="images/solar-farm.jpg" alt="Parque solar de grande escala">
+          <div class="g-caption"><span>Utility Scale</span><p>Parque Solar</p></div>
+        </div>
+        <div class="g-item" data-filter="solar" data-caption="Vista aérea de uma instalação solar de longa cobertura, adaptada ao layout do edifício.">
+          <img src="images/rooftop-aerial-long.jpg" alt="Vista aérea de instalação solar">
+          <div class="g-caption"><span>On-Grid · Comercial</span><p>Cobertura Extensa</p></div>
+        </div>
+        <div class="g-item" data-filter="storage" data-caption="Sala técnica de inversores e sistemas de armazenamento em baterias.">
+          <img src="images/battery-room1.jpg" alt="Sala de inversores e baterias">
+          <div class="g-caption"><span>Armazenamento</span><p>Sala de Inversores</p></div>
+        </div>
+        <div class="g-item" data-filter="storage" data-caption="Banco de baterias organizado para gestão de picos de consumo e backup energético.">
+          <img src="images/battery-room2.jpg" alt="Banco de baterias">
+          <div class="g-caption"><span>Armazenamento</span><p>Banco de Baterias</p></div>
+        </div>
+        <div class="g-item" data-filter="maintenance" data-caption="Diagnóstico de desempenho — identificação de sujidade que reduz a eficiência dos painéis.">
+          <img src="images/panel-closeup.jpg" alt="Diagnóstico de painel solar">
+          <div class="g-caption"><span>Manutenção</span><p>Diagnóstico de Desempenho</p></div>
+        </div>
+        <div class="g-item" data-filter="maintenance" data-caption="Limpeza robótica de painéis, parte do nosso programa de manutenção preventiva.">
+          <img src="images/panel-cleaning.jpg" alt="Limpeza de painéis solares">
+          <div class="g-caption"><span>Manutenção</span><p>Limpeza de Painéis</p></div>
+        </div>
+        <div class="g-item" data-filter="maintenance" data-caption="Cabos elétricos industriais fornecidos para projetos de infraestrutura energética.">
+          <img src="images/cable-reels.jpg" alt="Bobines de cabos elétricos">
+          <div class="g-caption"><span>Material</span><p>Cabos Elétricos</p></div>
+        </div>
+        <div class="g-item" data-filter="maintenance" data-caption="Transformador instalado como parte de uma solução de infraestrutura elétrica.">
+          <img src="images/transformer.jpg" alt="Transformador elétrico">
+          <div class="g-caption"><span>Material</span><p>Transformador</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ CONTACT ============ -->
+<main id="page-contact" class="page">
+  <section class="page-hero contact-hero-banner">
+    <div class="wrap page-head-row">
+      <div>
+        <div class="eyebrow">Fale Connosco</div>
+        <h1>Contacto</h1>
+      </div>
+      <img class="page-head-mark contact-mark" src="images/blupower-mark-outline-cyan.png" alt="">
+    </div>
+  </section>
+
+  <section class="section" style="border-top:none;">
+    <div class="wrap">
+      <p class="lede" style="margin-bottom:44px;">Envie-nos uma mensagem e um dos nossos agentes irá responder-lhe brevemente.</p>
+
+      <div class="contact-grid">
+        <div class="contact-info-card">
+          <div class="contact-row">
+            <div class="icon-badge"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 4C3 3.5 3.5 3 4 3H6.5L8 6.5L6 8C6.8 9.8 8.2 11.2 10 12L11.5 10L15 11.5V14C15 14.5 14.5 15 14 15C8 15 3 10 3 4Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+            <div><span>Telefone</span><a href="tel:+258852255222">+258 (85) 22 55 222</a></div>
+          </div>
+          <div class="contact-row">
+            <div class="icon-badge"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2.5" y="4" width="13" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M3 5L9 10L15 5" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+            <div><span>Email</span><a href="mailto:info@blupower.energy">info@blupower.energy</a></div>
+          </div>
+          <div class="contact-row">
+            <div class="icon-badge"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M2.5 9H15.5M9 2.5C10.8 4.4 11.8 6.6 11.8 9C11.8 11.4 10.8 13.6 9 15.5C7.2 13.6 6.2 11.4 6.2 9C6.2 6.6 7.2 4.4 9 2.5Z" stroke="currentColor" stroke-width="1.2"/></svg></div>
+            <div><span>Website</span><p>blupower.energy</p></div>
+          </div>
+          <div class="contact-row">
+            <div class="icon-badge"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L11 7L16 7.5L12.3 11L13.3 16L9 13.5L4.7 16L5.7 11L2 7.5L7 7L9 2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+            <div><span>Área de Atuação</span><p>Moçambique &amp; África Austral</p></div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <form id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <div class="form-row">
+              <div class="field">
+                <label for="fname">Nome</label>
+                <input type="text" id="fname" name="name" required placeholder="O seu nome">
+              </div>
+              <div class="field">
+                <label for="femail">Email</label>
+                <input type="email" id="femail" name="email" required placeholder="seu@email.com">
+              </div>
+            </div>
+            <div class="field">
+              <label for="fsubject">Assunto</label>
+              <input type="text" id="fsubject" name="subject" required placeholder="Sobre o que gostaria de falar?">
+            </div>
+            <div class="field">
+              <label for="fmessage">Mensagem</label>
+              <textarea id="fmessage" name="message" required placeholder="Escreva a sua mensagem..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn" id="submitBtn">
+              Enviar Mensagem
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M1 6H15M15 6L10 1M15 6L10 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="form-msg" id="formMsg"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ Lightbox ============ -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-frame">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption">
+      <span id="lightboxTag"></span>
+      <h3 id="lightboxTitle"></h3>
+      <p id="lightboxCaption"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Footer ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-row">
+      <div class="footer-brand">
+        <img src="images/logo-icon.jpg" alt="Blu Power Energy">
+        <div class="brand-text">BLU POWER<span>ENERGY</span></div>
+      </div>
+      <ul class="footer-links">
+        <li><button data-page="home">Home</button></li>
+        <li><button data-page="about">Perfil</button></li>
+        <li><button data-page="services">Serviços</button></li>
+        <li><button data-page="projects">Projetos</button></li>
+        <li><button data-page="contact">Contacto</button></li>
+      </ul>
+    </div>
+    <div class="footer-fine">© <span id="year"></span> BLU POWER ENERGY — Transformamos Energia em Valor Financeiro</div>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
 </body>
 </html>
